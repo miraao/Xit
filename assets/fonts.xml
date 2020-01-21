@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<familyset version="22">
+    <!-- first font is default -->
+    <family name="丸ゴシック">
+        <font weight="400" style="normal">ui2.dat</font>
+    </family>
+
+    <!-- Note that aliases must come after the fonts they reference. -->
+    <alias name="arial" to="丸ゴシック" />
+    <alias name="times new roman" to="丸ゴシック"/>
+    <alias name="courier new" to="丸ゴシック"/>
+
+    <family name="角ゴシック">
+        <font weight="400" style="normal">ui.dat</font>
+    </family>
+    <family name="太丸ゴシック">
+        <font weight="100" style="normal">ui2.dat</font>
+    </family>
+
+    <!-- fallback fonts -->
+    <family lang="ja">
+        <font weight="400" style="normal" index="0">ui2.dat</font>
+    </family>
+</familyset>

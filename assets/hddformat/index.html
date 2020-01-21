@@ -1,0 +1,75 @@
+﻿<!DOCTYPE html>
+
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+<head>
+	<meta charset="utf-8" />
+	<title></title>
+	<meta name="viewport" content="width=device-width">
+	<link rel="stylesheet" type="text/css" href="./css/app.css">
+	<script src="../common/js/vue.min.js"></script>
+	<script src="../common/js/vue-router.min.js"></script>
+</head>
+<body>
+	<div id="app">
+		<router-view class="content" name="index-content"></router-view>
+	</div>
+	<script src="./js/app.js"></script>
+	<script language="javascript">
+		function setDeviceName(devName) {
+		    var element = document.getElementById("device_name");
+		    if (element !== null) {
+		    	element.innerText = devName;
+		    }
+		}
+		
+		function setFormatProgress(progress) {
+		    
+		    var width = '' + progress + '%';
+		    var progressText = document.getElementById("progress_text");
+		    if (progressText !== null) {
+		    	progressText.innerText = width;
+		    }
+		    var progressBar = document.getElementById("progress_bar");
+		    if (progressBar !== null) {
+		    	progressBar.style.width = width;
+		    }
+		}
+
+		function showCompleteMessage(error, messageId) {
+
+			var successMessage1Display = 'none';
+			var failureMessage1Display = 'none';
+			var successMessage2Display = 'none';
+			if (error !== 0) {
+				failureMessage1Display = 'block';
+			}
+			else if (error === 0 && messageId === 1) {
+				successMessage2Display = 'block';
+			}
+			else {
+				successMessage1Display = 'block';
+			}
+			var successMessage1 = document.getElementById('success_message1');
+			if (successMessage1) {
+				successMessage1.style.display = successMessage1Display;
+			}
+			var failureMessage1 = document.getElementById('failure_message1');
+			if (failureMessage1) {
+				failureMessage1.style.display = failureMessage1Display;
+			}
+			var successMessage2 = document.getElementById('success_message2');
+			if (successMessage2) {
+				successMessage2.style.display = successMessage2Display;
+			}
+		}
+		
+		function showMessageDialog() {
+		
+			var messageDialog = document.getElementById("message_dialog");
+			if (messageDialog !== null) {
+				messageDialog.style.display = 'flex';
+			}
+		}
+	</script>
+</body>
+</html>

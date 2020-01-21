@@ -1,0 +1,64 @@
+﻿<!DOCTYPE html>
+
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta charset="utf-8" />
+<title></title>
+<meta name="viewport" content="width=device-width">
+<link rel="stylesheet" type="text/css" href="css/app.css">
+<script src="../common/js/vue.min.js"></script>
+<script src="../common/js/vue-router.min.js"></script>
+</head>
+<body>
+	<div id="app">
+		<keep-alive>
+			<router-view class="index-content" name="index-content"></router-view>
+		</keep-alive>
+		
+		<notify-dialog class="notify-dialog"
+					   v-if="notifyDialog.show === true"
+					   v-bind:message="notifyDialog.message"
+					   message-text-align="center"
+					   v-bind:is-show-dialog="notifyDialog.show"
+					   v-on:notify-timeout="notifyTimeoutHandler">
+		</notify-dialog>
+
+		<!-- 選局エラー ダイアログ-->
+		<notify-dialog class="notify-dialog"
+					v-if="sharedState.isShowSelectChannelErrorDialog"
+					v-bind:message="new Array(sharedState.selectChannelError)"
+					v-bind:is-show-dialog="sharedState.isShowSelectChannelErrorDialog"
+					v-on:notify-timeout="notifySelectChannelErrorTimeoutHandler">
+		</notify-dialog>
+
+		<!-- 緊急警報放送通知 ダイアログ-->
+		<div class="modal-overlay" v-if="listDialog === 'ewsDetect'">
+			<list-dialog class="ews-detect"
+				v-bind:key-event="keyEvent"
+				v-if="listDialog === 'ewsDetect'"
+				title="緊急警報放送"
+				v-bind:message-info-list="ewsDetectMsg"
+				v-bind:item-list="listDialogItems"
+				v-on:click="clickEwsDetectItem">
+			</list-dialog>
+		</div>
+
+		<!-- チューナー非接続ダイアログ -->
+		<tuner-disconnect-dialog class="tuner-disconnect-dialog"
+								 v-bind:submit="submitTunerDisconnectDialog"
+								 v-on:showstate="handleTunerDisconnectDialogShowState"></tuner-disconnect-dialog>
+		
+		<!-- アンテナ電源ショート通知ダイアログ -->
+		<antenna-power-error-dialog class="antenna-power-error-dialog"
+									v-bind:submit="submitAntennaPowerErrorDialog"
+									v-on:update="updateAntennaPowerErrorDialogState"></antenna-power-error-dialog>
+									
+		<!-- 緊急ニュース速報通知ダイアログ -->
+		<emergency-news-dialog class="emergency-news-dialog"
+									v-bind:is-preview="false"
+									v-bind:submit="submitEmergencyNewsDialog"
+									v-on:update-emergency-news="updateEmergencyNewsDialogState"></emergency-news-dialog>
+	</div>
+	<script src="js/app.js"></script>
+</body>
+</html>

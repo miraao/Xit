@@ -1,0 +1,190 @@
+﻿<!DOCTYPE html>
+
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+<head>
+	<meta charset="utf-8" />
+	<title></title>
+	<meta name="viewport" content="width=1280,height=720,user-scalable=no">
+	<link rel="stylesheet" type="text/css" href="css/app.css">
+	<script src="../common/js/vue.min.js"></script>
+</head>
+<body>
+	<div id="app">
+	
+		<!-- メッセージダイアログ -->
+		<notify-message class="notify-recording-message"
+						v-if="sharedState.itemShowInfo.notifyRecordingMessage"
+						dialog-width="auto"
+						dialog-min-width="45vw"
+						dialog-max-width="58vw"
+						dialog-height="auto"
+						dialog-padding="5.025vh 4.6875vw"
+						dialog-border="1px solid #666666"
+						message-font-size="1.5625vw"
+						message-line-height="1.6em"
+						message-height="1.6em"
+						background-color="rgba(0, 0, 0, 0.85)"
+						box-shadow="none"
+						message-text-align="left"
+						v-bind:message-info-list="notifyRecordingMessageList"></notify-message>
+
+		<!-- B-CAS挿抜エラーダイアログ -->
+		<cas-remove-error class="cas-remove-error"></cas-remove-error>
+
+		<!-- CA代替確認ダイアログ -->
+		<ca-confirm-dialog class="ca-confirm-dialog"></ca-confirm-dialog>
+		
+		<!-- BMLテキスト入力ダイアログ -->
+		<bml-input-text-dialog class="bml-input-text-dialog"></bml-input-text-dialog>
+		
+		<!-- BML確認ダイアログ -->
+		<bml-confirm-dialog class="bml-confirm-dialog"></bml-confirm-dialog>
+
+		<!-- BML通知ダイアログ -->
+		<bml-notify-dialog class="bml-notify-dialog"></bml-notify-dialog>
+
+		<!-- AribError ダイアログ -->
+		<arib-error class="arib-error"
+					v-show="isShowAribError === true"
+					v-on:update="updateAribErrorShowState"></arib-error>
+
+		<!-- データ放送パネル -->
+		<data-panel class="data-panel"></data-panel>
+
+		<!-- 視聴年齢制限解除ダイアログ -->
+		<div class="cancel-parental-rate-wrapper">
+			<cancel-parental-rate class="cancel-parental-rate"></cancel-parental-rate>
+		</div>
+		
+		<!-- メッセージダイアログ -->
+		<div class="change-broadcast-type-layer"
+			 v-if="sharedState.itemShowInfo.changeBroadcastTypeLayer === true">
+		</div>
+
+		<!-- メッセージダイアログ -->
+		<div class="message-dialog-wrapper"
+			 v-if="sharedState.messageDialogInfo.messageList.length !== 0">
+			<message-dialog class="message-dialog"
+							v-bind:message-list="sharedState.messageDialogInfo.messageList"></message-dialog>
+		</div>
+
+		<!-- 操作メニュー -->
+		<control-menu class="control-menu"></control-menu>
+
+		<!-- 番組詳細  -->
+		<program-detail class="program-detail"></program-detail>
+
+		<!-- 画面表示 -->
+		<screen-display class="screen-display"></screen-display>
+
+		<!-- 画面表示(音声) -->
+		<screen-display-audio class="screen-display-audio"></screen-display-audio>
+
+		<!-- 画面表示(字幕) -->
+		<screen-display-subtitle class="screen-display-subtitle"></screen-display-subtitle>
+
+		<!-- 画面表示(文字スーパー) -->
+		<screen-display-text-super class="screen-display-text-super"></screen-display-text-super>
+		
+		<!-- 通知ダイアログ -->
+		<notify-with-image-dialog class="notify-with-image-dialog"
+					   v-if="sharedState.itemShowInfo.notifyPlayInfoDialog === true"
+					   dialog-width="auto"
+					   dialog-max-width="80vw"
+					   dialog-height="7.5vh"
+					   dialog-padding="0 1.458vw"
+					   message-font-size="1.5625vw"
+					   v-bind:is-show-dialog="sharedState.itemShowInfo.notifyPlayInfoDialog"
+					   v-bind:img-src="notifyPlayInfoDialogImageSrc"
+					   v-bind:message="notifyPlayInfoDialogMessage"
+					   v-bind:dialog-display-time="notifyPlayInfoDialogDisplayTime"
+					   v-bind:hide-dialog-auto="notifyPlayInfoDialogHideAuto"
+					   v-on:notify-timeout="notifyTimeoutHandler"></notify-with-image-dialog>
+
+		<!-- 3桁番号選局 -->
+		<digit-input class="digit-input"></digit-input>
+
+		<!-- 画面表示(メッセージ) -->
+		<screen-display-message class="screen-display-message"></screen-display-message>
+
+		<!-- ダイアログ -->
+		<dialog-wrapper class="dialog-wrapper"></dialog-wrapper>
+
+		<!-- 機器情報 -->
+		<system-information class="system-information"></system-information>
+
+		<div class="modal-overlay" v-if="listDialog === 'ewsDetect'">
+			<!-- 緊急警報放送通知 ダイアログ-->
+			<list-dialog class="ews-detect"
+				v-bind:key-event="keyEvent"
+				title="緊急警報放送"
+				v-bind:message-info-list="ewsDetectMsg"
+				v-bind:item-list="listDialogItems"
+				v-on:click="clickEwsDetectItem">
+			</list-dialog>
+		</div>
+
+		<!-- 録画停止メニュー -->
+		<record-stop-menu class="record-stop-menu"></record-stop-menu>
+
+		<!-- 録画停止通知ダイアログ -->
+		<notify-record-status-dialog class="notify-record-status-dialog"></notify-record-status-dialog>
+
+		<!-- 録画停止確認ダイアログ -->
+		<confirm-record-stop-dialog class="confirm-record-stop-dialog"></confirm-record-stop-dialog>
+		
+		<!-- 録画失敗エラーダイアログ -->
+		<direct-recording-error-dialog class="direct-recording-error-dialog"></direct-recording-error-dialog>
+		
+		<!-- HDD未接続エラーダイアログ -->
+		<message-dialog-with-button class="hdd-not-connected-error-dialog"
+						v-if="sharedState.itemShowInfo.hddNotConnectedErrorDialog === true"
+						dialog-width="65vw"
+						dialog-height="50vh"
+						dialog-padding="6% 8%"
+						dialog-border="1px solid #666666"
+						message-font-size="1.875vw"
+						message-line-height="1.6em"
+						message-text-align="left"
+						button-width="50%"
+						button-height="8vh"
+						button-font-size="1.875vw"
+						button-focus="submit"
+						button-margin-left="25%"
+						v-bind:message-info-list="hddNotConnectedErrorMessage"
+						v-bind:message-margin-bottom="hddNotConnectedErrorMarginInfo"
+						v-on:click="clickHddNotConnectedErrorDialog"></message-dialog-with-button>
+		
+		<!-- ガイド -->
+		<guide class="guide"></guide>
+		
+		<!-- 通知ダイアログ -->
+		<notify-message class="notify-message"
+					   v-if="sharedState.itemShowInfo.notifyDialog === true"
+					   dialog-width="auto"
+					   dialog-max-width="80vw"
+					   dialog-height="7.5vh"
+					   dialog-padding="0 1.458vw"
+					   message-font-size="1.5625vw"
+					   background-color="rgba(0, 0, 0, 0.85)"
+					   box-shadow="none"
+					   v-bind:message-info-list="messageList"></notify-message>
+
+		<!-- チューナー非接続ダイアログ -->
+		<tuner-disconnect-dialog class="tuner-disconnect-dialog"
+								 v-bind:submit="submitTunerDisconnectDialog"
+								 v-on:showstate="handleTunerDisconnectDialogShowState"></tuner-disconnect-dialog>
+		
+		<!-- アンテナ電源ショート通知ダイアログ -->
+		<antenna-power-error-dialog class="antenna-power-error-dialog"
+									v-bind:submit="submitAntennaPowerErrorDialog"
+									v-on:update="updateAntennaPowerErrorDialogState"></antenna-power-error-dialog>
+									
+		<!-- 録画開始通知ダイアログ -->
+		<confirm-play-content-dialog class="confirm-play-content-dialog"
+									 v-show="sharedState.itemShowInfo.confirmPlayContentDialog === true"></confirm-play-content-dialog>
+								 
+	</div>
+	<script src="js/app.js"></script>
+</body>
+</html>
